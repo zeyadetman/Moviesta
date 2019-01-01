@@ -30,14 +30,14 @@ class Card extends Component {
   }
 
   render() {
-    const { poster_path, id, title } = this.props;
+    const { poster_path, id, title, isMovieFav } = this.props;
     const { genres, release_date, homepage, overview, vote_average, popularity, runtime } = this.state.movie;
     return (
       <div>
         <AntCard
           cover={<img alt="example" src={`https://image.tmdb.org/t/p/w500/${poster_path}`} />}
           actions={[
-            <Rate count={1} key={id} />,
+            <Rate count={1} key={id} defaultValue={isMovieFav ? 1 : 0} onChange={() => this.props.addMovieFav(id)} />,
             <Icon type="edit" key={id} />,
             <Icon type="info-circle" onClick={() => this.handleViewModal(id)} key={id} />
           ]}

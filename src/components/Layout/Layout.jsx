@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import { Layout as AntLayout, Menu, Icon, Input, Select, Pagination } from 'antd';
 import { connect } from 'react-redux';
-import { searchKeywords, searchMoviesByKeywords, searchMovies } from '../../actions/searchAction';
-import { pluck, map } from 'ramda';
+import {
+  searchKeywords,
+  searchMoviesByKeywords,
+  searchMovies,
+  movieMoreInfo
+} from '../../actions/searchAction';
+import { pluck, map, includes, without } from 'ramda';
 import 'antd/dist/antd.css';
 import Card from './Card';
-import { fire } from '../../firebase/base';
+import { fire, firestore } from '../../firebase/base';
 import Cookies from 'universal-cookie';
 
 const { Header, Content } = AntLayout;
@@ -23,13 +28,26 @@ class Layout extends Component {
       searchQuery: '',
       searchPagesCount: 0,
       keywordsIds: [],
-      movies: []
+      movies: [],
+      favs: [],
+      mode: 'home'
     };
 
-    this.handleSearchType = this.handleSearchType.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
     this.fetchMovies = this.fetchMovies.bind(this);
+    this.addMovieFav = this.addMovieFav.bind(this);
+  }
+
+  componentDidMount() {
+    if (fire.auth().currentUser.uid) {
+      const ref = firestore.collection('users').doc(fire.auth().currentUser.uid);
+      ref.get().then(doc => {
+        if (doc.exists) {
+          this.setState({ favs: doc.data().favorites });
+        }
+      });
+    }
   }
 
   async fetchMovies() {
@@ -37,11 +55,6 @@ class Layout extends Component {
     await this.props.searchMoviesByKeywords(keywordsIds);
     const { pageCount, results } = this.props;
     this.setState({ searchPagesCount: pageCount * pageSize, movies: results });
-    console.log(keywordsIds, pageCount, results);
-  }
-
-  handleSearchType(searchType) {
-    this.setState({ searchType });
   }
 
   async handleSearch(searchQuery) {
@@ -49,7 +62,6 @@ class Layout extends Component {
     const { searchType } = this.state;
 
     if (searchType === 'title') {
-      console.log('Title', searchQuery, '------------------------');
       await this.props.searchMovies(searchQuery);
       const { pageCount, results } = this.props;
       this.setState({ searchPagesCount: pageCount * 20, movies: results });
@@ -69,19 +81,27 @@ class Layout extends Component {
   }
 
   async handlePageChange(pageNum) {
-    const { searchType, searchQuery } = this.state;
-
+    const { searchType, searchQuery, keywordsIds } = this.state;
     if (searchType === 'title') {
       await this.props.searchMovies(searchQuery, pageNum);
-      const { results } = this.props;
-      this.setState({ movies: results }, () => console.log(this.state.movies));
     }
     else if (searchType === 'keywords') {
-      const { keywordsIds } = this.state;
       await this.props.searchMoviesByKeywords(keywordsIds, pageNum);
-      const { results } = this.props;
-      console.log(results);
     }
+
+    this.setState({ movies: this.props.results });
+  }
+
+  async addMovieFav(id) {
+    if (this.state.favs && includes(id, this.state.favs)) {
+      await this.setState({ favs: without([id], this.state.favs) });
+    }
+    else {
+      await this.state.favs ? this.setState({ favs: [...this.state.favs, id] })
+        : this.setState({ favs: [id] });
+    }
+
+    firestore.collection('users').doc(fire.auth().currentUser.uid).set({ favorites: this.state.favs });
   }
 
   render() {
@@ -104,7 +124,7 @@ class Layout extends Component {
           >
             <Select
               defaultValue={this.state.searchType}
-              onChange={this.handleSearchType}
+              onChange={(searchType) => this.setState({ searchType })}
               style={{ width: 100 }}
             >
               <Option value="title">Title</Option>
@@ -128,9 +148,9 @@ class Layout extends Component {
               key="sub1"
               title={<span><Icon type="user" /><span>User</span></span>}
             >
-              <Menu.Item key="1">Home</Menu.Item>
-              <Menu.Item key="2">Favorite List</Menu.Item>
-              <Menu.Item key="3" onClick={() => { fire.auth().signOut(); cookies.remove('token') }}>Sign Out</Menu.Item>
+              <Menu.Item key="1" onClick={() => this.setState({ mode: 'home' })}>Home</Menu.Item>
+              <Menu.Item key="2" onClick={() => this.setState({ mode: 'favorite' })}>Favorite List</Menu.Item>
+              <Menu.Item key="3" onClick={() => { fire.auth().signOut(); cookies.remove('token'); }}>Sign Out</Menu.Item>
             </SubMenu>
           </Menu>
         </Header>
@@ -144,16 +164,19 @@ class Layout extends Component {
             }}>
               {
                 this.state.movies
-                  ? map(movie =>
-                    <Card
-                      key={movie.id}
-                      id={movie.id}
-                      poster_path={movie.poster_path}
-                      title={movie.title}
-                      overview={movie.overview}
-
-                    />, this.state.movies
-                  )
+                  ? map(movie => {
+                    console.log(movie);
+                    return (
+                      <Card
+                        key={movie.id}
+                        id={movie.id}
+                        poster_path={movie.poster_path}
+                        title={movie.title}
+                        overview={movie.overview}
+                        addMovieFav={this.addMovieFav}
+                        isMovieFav={this.state.favs ? includes(movie.id, this.state.favs) : false}
+                      />);
+                  }, this.state.movies)
                   : null
               }
             </div>
@@ -170,7 +193,7 @@ class Layout extends Component {
             />
           </div>
         </Content>
-      </AntLayout>
+      </AntLayout >
     );
   }
 }
@@ -187,6 +210,7 @@ export default connect(
   {
     searchKeywords,
     searchMoviesByKeywords,
-    searchMovies
+    searchMovies,
+    movieMoreInfo
   }
 )(Layout);

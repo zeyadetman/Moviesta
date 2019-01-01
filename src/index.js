@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Home from './components/Home/Home';
 import { store } from './store/configureStore';
 import { Provider } from 'react-redux';
-import './index.css';
 import * as serviceWorker from './serviceWorker';
-import Home from './components/Home/Home';
+import './index.css';
 
 ReactDOM.render(
   <Provider store={store}>

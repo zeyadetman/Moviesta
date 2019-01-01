@@ -10,4 +10,9 @@ const config = {
 };
 
 export const fire = firebase.initializeApp(config);
-export const db = firebase.database();
+const firestore = firebase.firestore();
+const settings = {/* your settings... */ timestampsInSnapshots: true };
+firestore.settings(settings);
+export const rootRef = firebase.database().ref();
+export const usersRef = rootRef.child('users');
+export { firestore };

@@ -35,7 +35,6 @@ export const searchMoviesByKeywords = (keywords, pageNum) => dispatch => {
 }; //done
 
 export const movieMoreInfo = (id) => dispatch => {
-  console.log(id);
   return MOVIES_DB.get(`/movie/${id}?api_key=${API_KEY}`).then(
     response => dispatch({
       type: FETCH_MOVIE_INFO,

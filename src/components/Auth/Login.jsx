@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Form, Icon, Input, Button, Checkbox, message
 } from 'antd';
-import { fire } from '../../firebase/base';
+import { fire, firestore } from '../../firebase/base';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
@@ -27,11 +27,13 @@ class LoginForm extends Component {
           if (this.state.isLogin) {
             fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(
               u => cookies.set('token', u.user.uid, { path: '/' })
-            ).catch(err => message.error(err.message));
+            )
+              .catch(err => message.error(err.message));
           } else {
-            fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(
-              u => cookies.set('token', u.user.uid, { path: '/' })
-            ).catch(err => message.error(err.message));
+            fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+              .then(u => cookies.set('token', u.user.uid, { path: '/' }))
+              .then(() => firestore.collection('users').doc(fire.auth().currentUser.uid.toString()).set({ favorits: [] }))
+              .catch(err => message.error(err.message));
           }
         });
       }
@@ -68,11 +70,11 @@ class LoginForm extends Component {
           })(
             <Checkbox>Remember me</Checkbox>
           )}
-          <a className="login-form-forgot" href="">Forgot password</a>
+          <p className="login-form-forgot">Forgot password</p>
           <Button type="primary" htmlType="submit" className="login-form-button">
             {this.state.isLogin ? 'Login' : 'Register'}
           </Button>
-          Or <a onClick={() => this.setState({ isLogin: !this.state.isLogin })}>
+          Or <a href="#" onClick={() => this.setState({ isLogin: !this.state.isLogin })}>
             {this.state.isLogin ? 'Register Now' : 'Login Instead'}
           </a>
         </Form.Item>
