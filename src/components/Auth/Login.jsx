@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import {
   Form, Icon, Input, Button, Checkbox, message
 } from 'antd';
-import { fire, firestore } from '../../firebase/base';
+import { fire, firestore } from 'firebase/base';
+import PropTypes from 'prop-types';
 import Cookies from 'universal-cookie';
+import { formShape } from 'rc-form';
 
 const cookies = new Cookies();
 class LoginForm extends Component {
@@ -82,6 +84,12 @@ class LoginForm extends Component {
     );
   }
 }
+
+LoginForm.propTypes = {
+  form: formShape,
+  validateFields: PropTypes.func,
+  getFieldDecorator: PropTypes.func
+};
 
 const Login = Form.create()(LoginForm);
 export default Login;

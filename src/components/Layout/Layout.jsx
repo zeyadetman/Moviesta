@@ -6,12 +6,15 @@ import {
   searchMoviesByKeywords,
   searchMovies,
   movieMoreInfo
-} from '../../actions/searchAction';
+} from 'actions/searchAction';
+import PropTypes from 'prop-types';
 import { pluck, map, includes, without } from 'ramda';
-import 'antd/dist/antd.css';
 import Card from './Card';
-import { fire, firestore } from '../../firebase/base';
+import { fire, firestore } from 'firebase/base';
 import Cookies from 'universal-cookie';
+import cinemaLogo from 'assets/circle.png';
+import 'antd/dist/antd.css';
+import './card.css';
 
 const { Header, Content } = AntLayout;
 const SubMenu = Menu.SubMenu;
@@ -155,6 +158,29 @@ class Layout extends Component {
           </Menu>
         </Header>
         <Content style={{ padding: '25px 50px' }}>
+          <div style={{
+            textAlign: 'center',
+            margin: '0 auto',
+            marginBottom: '25px',
+            width: '50%',
+            minWidth: '250px'
+          }}>
+            <h1 style={{
+              fontSize: '3em',
+              marginBottom: 0,
+              fontWeight: 900,
+            }}>
+              M
+              <span style={{ verticalAlign: 'text-bottom' }}>
+                <img style={{ animation: 'spin 6s linear infinite' }} src={cinemaLogo} width="30" alt="cinema logo" />
+              </span>
+              VIESTA
+            </h1>
+            <h2 style={{
+              color: '#545454',
+              fontWeight: 700
+            }}>The King of Movies</h2>
+          </div>
           <div>
             <div style={{
               display: 'grid',
@@ -197,6 +223,16 @@ class Layout extends Component {
     );
   }
 }
+
+Layout.propTypes = {
+  searchMoviesByKeywords: PropTypes.func,
+  searchKeywords: PropTypes.func,
+  searchMovies: PropTypes.func,
+  movie: PropTypes.object,
+  poster_path: PropTypes.string,
+  id: PropTypes.any,
+  results: PropTypes.any,
+};
 
 const mapStateToProps = state => {
   return {

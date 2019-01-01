@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Card as AntCard, Icon, Rate, Modal } from 'antd';
 import { connect } from 'react-redux';
-import { movieMoreInfo } from '../../actions/searchAction';
-import { formatYear } from '../../utils/index';
+import { movieMoreInfo } from 'actions/searchAction';
+import { formatYear } from 'utils/index';
+import PropTypes from 'prop-types';
 import { pluck } from 'ramda';
-import './card.css';
 
 const { Meta } = AntCard;
 class Card extends Component {
@@ -38,7 +38,6 @@ class Card extends Component {
           cover={<img alt="example" src={`https://image.tmdb.org/t/p/w500/${poster_path}`} />}
           actions={[
             <Rate count={1} key={id} defaultValue={isMovieFav ? 1 : 0} onChange={() => this.props.addMovieFav(id)} />,
-            <Icon type="edit" key={id} />,
             <Icon type="info-circle" onClick={() => this.handleViewModal(id)} key={id} />
           ]}
         >
@@ -55,37 +54,68 @@ class Card extends Component {
         >
           <div style={{
             display: 'flex',
-            marginBottom: '15px',
             flexWrap: 'wrap'
           }}>
             <img
               style={{
                 maxWidth: '360px',
-                width: '100%'
+                width: '100%',
+                maxHeight: '400px'
               }}
               alt="example"
               src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
             />
             <div
               style={{
-                marginLeft: '15px'
+                marginLeft: '15px',
+                maxWidth: '500px'
               }}
               className="movie__meta"
             >
-              <h1 style={{ fontSize: '2.5em' }}><a href={homepage} rel="noopener">{title}</a></h1>
-              <p>{formatYear(release_date) || 'Date Not Found'}</p>
-              <p>{genres ? pluck('name', genres).join(' / ') : 'No Genres Found'}</p>
-              <p><Icon type="clock-circle" theme="twoTone" twoToneColor="#52c41a" /> {runtime}</p>
-              <p><Icon type="line-chart" /> {popularity}</p>
-              <p><Icon type="notification" theme="twoTone" twoToneColor="#fc3" /> {vote_average}</p>
+              <h1 style={{ marginBottom: 0 }}>
+                <a href={homepage} rel="noopener" style={{ fontSize: '2.5em' }}>{title}</a>
+                <span style={{ marginLeft: '10px', fontSize: '1em' }}>{formatYear(release_date) || 'Date Not Found'}</span>
+              </h1>
+
+              <p style={{
+                fontSize: '1.5em',
+                fontWeight: 600
+              }}>{genres ? pluck('name', genres).join(' / ') : 'No Genres Found'}</p>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-evenly',
+                fontSize: '1.2em',
+                margin: '10px 5px'
+              }}>
+                <p title="Runtime"><Icon type="clock-circle" theme="twoTone" twoToneColor="#52c41a" /> {runtime}</p>
+                <p title="Popularity"><Icon type="line-chart" /> {popularity}</p>
+                <p title="Vote Average"><Icon type="notification" theme="twoTone" twoToneColor="#fc3" /> {vote_average}</p>
+              </div>
+              <label>
+                <span style={{
+                  fontSize: '1.5em',
+                  fontWeight: 500
+                }}>Overview</span>
+                <p style={{ textAlign: 'justify' }}>{overview}</p>
+              </label>
             </div>
           </div>
-          <p>{overview}</p>
         </Modal>
       </div>
     );
   }
 }
+
+Card.propTypes = {
+  results: PropTypes.array,
+  id: PropTypes.any,
+  isMovieFav: PropTypes.bool,
+  movieMoreInfo: PropTypes.func,
+  addMovieFav: PropTypes.func,
+  movie: PropTypes.object,
+  title: PropTypes.string,
+  poster_path: PropTypes.string,
+};
 
 const mapStateToProps = state => {
   return {

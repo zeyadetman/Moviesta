@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { fire } from '../../firebase/base';
-import Layout from '../Layout/Layout';
-import Login from '../Auth/Login';
+import { fire } from 'firebase/base';
+import Layout from 'components/Layout/Layout';
+import Login from 'components/Auth/Login';
 
 
 export default class Home extends Component {
