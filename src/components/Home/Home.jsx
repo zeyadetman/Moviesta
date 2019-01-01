@@ -14,9 +14,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    console.log(this.state.user, new Date(), 'before');
     fire.auth().onAuthStateChanged(user => user ? this.setState({ user, status: 'finish' }) : this.setState({ user: null, status: 'finish' }));
-    console.log(this.state.user, new Date(), 'after');
   }
 
   render() {

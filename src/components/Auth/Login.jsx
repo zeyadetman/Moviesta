@@ -24,7 +24,6 @@ class LoginForm extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         this.setState({ email: values.email, password: values.password }, () => {
           if (this.state.isLogin) {
             fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(
