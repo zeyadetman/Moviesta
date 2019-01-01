@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/Moviesta/precache-manifest.93dd2297acdda0648611d2cf8e8aa492.js"
+  "/Moviesta/precache-manifest.eb4d6b387f6bea3be15f1660bca58a77.js"
 );
 
 workbox.clientsClaim();

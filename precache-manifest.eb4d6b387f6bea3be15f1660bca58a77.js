@@ -4,15 +4,15 @@ self.__precacheManifest = [
     "url": "/Moviesta/static/js/runtime~main.a8efae5d.js"
   },
   {
-    "revision": "d977d30b554b15a8cd9b",
-    "url": "/Moviesta/static/js/main.d977d30b.chunk.js"
+    "revision": "a291b0b7309096458771",
+    "url": "/Moviesta/static/js/main.a291b0b7.chunk.js"
   },
   {
     "revision": "54b6cb75b8a47d0fe1a6",
     "url": "/Moviesta/static/js/1.54b6cb75.chunk.js"
   },
   {
-    "revision": "d977d30b554b15a8cd9b",
+    "revision": "a291b0b7309096458771",
     "url": "/Moviesta/static/css/main.3a9f1491.chunk.css"
   },
   {
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/Moviesta/static/css/1.791a1592.chunk.css"
   },
   {
-    "revision": "d66527b53081e3fe1a8922e8cbb35931",
+    "revision": "3c0d4675e92fd5996b630c452545999c",
     "url": "/Moviesta/index.html"
   }
 ];
