@@ -33,13 +33,15 @@ class Layout extends Component {
       keywordsIds: [],
       movies: [],
       favs: [],
-      mode: 'home'
+      mode: 'home',
+      favsInfo: []
     };
 
     this.handleSearch = this.handleSearch.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
     this.fetchMovies = this.fetchMovies.bind(this);
     this.addMovieFav = this.addMovieFav.bind(this);
+    this.fetchFavsInfo = this.fetchFavsInfo.bind(this);
   }
 
   componentDidMount() {
@@ -61,7 +63,7 @@ class Layout extends Component {
   }
 
   async handleSearch(searchQuery) {
-    await this.setState({ searchQuery });
+    await this.setState({ searchQuery, mode: 'home' });
     const { searchType } = this.state;
 
     if (searchType === 'title') {
@@ -107,6 +109,17 @@ class Layout extends Component {
     firestore.collection('users').doc(fire.auth().currentUser.uid).set({ favorites: this.state.favs });
   }
 
+  async fetchFavsInfo(favs) {
+    const saving = [];
+    for (const fav of favs) {
+      const mr = await this.props.movieMoreInfo(fav);
+      const banks = mr.payload;
+      saving.push(banks);
+    }
+
+    this.setState({ ...this.state, mode: 'favorite', favsInfo: saving });
+  }
+
   render() {
     return (
       <AntLayout className="layout">
@@ -120,7 +133,8 @@ class Layout extends Component {
           <InputGroup
             compact
             style={{
-              width: '70%',
+              width: '95%',
+              maxWidth: '500px',
               display: 'flex',
               justifyContent: 'center'
             }}
@@ -152,7 +166,7 @@ class Layout extends Component {
               title={<span><Icon type="user" /><span>User</span></span>}
             >
               <Menu.Item key="1" onClick={() => this.setState({ mode: 'home' })}>Home</Menu.Item>
-              <Menu.Item key="2" onClick={() => this.setState({ mode: 'favorite' })}>Favorite List</Menu.Item>
+              <Menu.Item key="2" onClick={() => this.fetchFavsInfo(this.state.favs)}>Favorite List</Menu.Item>
               <Menu.Item key="3" onClick={() => { fire.auth().signOut(); cookies.remove('token'); }}>Sign Out</Menu.Item>
             </SubMenu>
           </Menu>
@@ -191,7 +205,6 @@ class Layout extends Component {
               {
                 this.state.movies
                   ? map(movie => {
-                    console.log(movie);
                     return (
                       <Card
                         key={movie.id}
@@ -202,18 +215,19 @@ class Layout extends Component {
                         addMovieFav={this.addMovieFav}
                         isMovieFav={this.state.favs ? includes(movie.id, this.state.favs) : false}
                       />);
-                  }, this.state.movies)
+                  }, this.state.mode === 'favorite'
+                      ? this.state.favsInfo
+                      : this.state.movies)
                   : null
               }
             </div>
             <Pagination
               style={{
                 textAlign: 'right',
-                margin: '10px 0'
+                margin: '15px 0'
               }}
               defaultCurrent={1}
               onChange={this.handlePageChange}
-              size="small"
               pageSize={pageSize}
               total={this.state.searchPagesCount}
             />
@@ -227,6 +241,7 @@ class Layout extends Component {
 Layout.propTypes = {
   searchMoviesByKeywords: PropTypes.func,
   searchKeywords: PropTypes.func,
+  movieMoreInfo: PropTypes.func,
   searchMovies: PropTypes.func,
   movie: PropTypes.object,
   poster_path: PropTypes.string,

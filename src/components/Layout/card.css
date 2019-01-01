@@ -10,7 +10,7 @@
 
 .ant-modal{
   width: 80% !important;
-  margin: 0 auto;
+  margin: -80px auto;
 }
 
 .movie__meta p {

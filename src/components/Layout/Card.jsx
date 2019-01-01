@@ -68,7 +68,8 @@ class Card extends Component {
             <div
               style={{
                 marginLeft: '15px',
-                maxWidth: '500px'
+                maxWidth: '500px',
+                minWidth: '200px'
               }}
               className="movie__meta"
             >

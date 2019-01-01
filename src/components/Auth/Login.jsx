@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Form, Icon, Input, Button, Checkbox, message
+  Form, Icon, Input, Button, message
 } from 'antd';
 import { fire, firestore } from 'firebase/base';
 import PropTypes from 'prop-types';
@@ -66,19 +66,16 @@ class LoginForm extends Component {
           )}
         </Form.Item>
         <Form.Item>
-          {getFieldDecorator('remember', {
-            valuePropName: 'checked',
-            initialValue: true,
-          })(
-            <Checkbox>Remember me</Checkbox>
-          )}
-          <p className="login-form-forgot">Forgot password</p>
           <Button type="primary" htmlType="submit" className="login-form-button">
             {this.state.isLogin ? 'Login' : 'Register'}
-          </Button>
-          Or <a href="#" onClick={() => this.setState({ isLogin: !this.state.isLogin })}>
+          </Button> Or&nbsp;
+          <span style={{
+            cursor: 'default',
+            color: '#1890ff',
+            textDecoration: 'underline'
+          }} onClick={() => this.setState({ isLogin: !this.state.isLogin })}>
             {this.state.isLogin ? 'Register Now' : 'Login Instead'}
-          </a>
+          </span>
         </Form.Item>
       </Form>
     );
