@@ -1,8 +1,8 @@
 <div align="center">
 	<img 
 		src="https://github.com/zeyadetman/Moviesta/blob/master/src/assets/logo.png" 
-		width="256" 
-		height="256">
+		width="270"
+		height="230">
 		<h1><a href="https://zeyadetman.github.io/Moviesta">Moviesta</a></h1>
 	<p>
 		<b>🎞️ The king of Movies</b>
@@ -10,6 +10,10 @@
 	<br>
 	<br>
 </div>
+
+## First Things First
+
+The app uses Google Firebase to handle Sign in, Sign up and Database, so if you want to try this app on your machine, go to Google Firebase and create a new file in this path `/src/firebase/base.js` and fill it with data as in this file `/src/firebase/examplebase.js`. If you faced any troubles, contact me.
 
 ## Available Scripts
 

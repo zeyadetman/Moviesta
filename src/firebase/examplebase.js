@@ -1,12 +1,12 @@
 import firebase from 'firebase';
 
 const config = {
-  apiKey: 'AIzaSyCOGzn37DcUSmXyDAB7W9EK6yJTbNkIj7g',
-  authDomain: 'moviesta-z.firebaseapp.com',
-  databaseURL: 'https://moviesta-z.firebaseio.com',
-  projectId: 'moviesta-z',
-  storageBucket: 'moviesta-z.appspot.com',
-  messagingSenderId: '471207436083'
+  apiKey: YOUR_APP_KEY,
+  authDomain: YOUR_authDomain,
+  databaseURL: YOUR_databaseURL,
+  projectId: YOUR_projectId,
+  storageBucket: YOUR_storageBucket,
+  messagingSenderId: YOUR_messagingSenderId
 };
 
 export const fire = firebase.initializeApp(config);
