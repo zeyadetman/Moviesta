@@ -1,15 +1,15 @@
 {
   "main.css": "/Moviesta/static/css/main.8eaa8c0c.chunk.css",
-  "main.js": "/Moviesta/static/js/main.a951479d.chunk.js",
-  "main.js.map": "/Moviesta/static/js/main.a951479d.chunk.js.map",
+  "main.js": "/Moviesta/static/js/main.dcef128c.chunk.js",
+  "main.js.map": "/Moviesta/static/js/main.dcef128c.chunk.js.map",
   "static/css/1.e8c9613e.chunk.css": "/Moviesta/static/css/1.e8c9613e.chunk.css",
-  "static/js/1.02f95772.chunk.js": "/Moviesta/static/js/1.02f95772.chunk.js",
-  "static/js/1.02f95772.chunk.js.map": "/Moviesta/static/js/1.02f95772.chunk.js.map",
+  "static/js/1.c04431a6.chunk.js": "/Moviesta/static/js/1.c04431a6.chunk.js",
+  "static/js/1.c04431a6.chunk.js.map": "/Moviesta/static/js/1.c04431a6.chunk.js.map",
   "runtime~main.js": "/Moviesta/static/js/runtime~main.a8efae5d.js",
   "runtime~main.js.map": "/Moviesta/static/js/runtime~main.a8efae5d.js.map",
   "static/css/1.e8c9613e.chunk.css.map": "/Moviesta/static/css/1.e8c9613e.chunk.css.map",
   "static/css/main.8eaa8c0c.chunk.css.map": "/Moviesta/static/css/main.8eaa8c0c.chunk.css.map",
   "index.html": "/Moviesta/index.html",
-  "precache-manifest.5ba766eb852771d000c76c959dc68a97.js": "/Moviesta/precache-manifest.5ba766eb852771d000c76c959dc68a97.js",
+  "precache-manifest.a776317c8bc1577c4c7696529ca307fc.js": "/Moviesta/precache-manifest.a776317c8bc1577c4c7696529ca307fc.js",
   "service-worker.js": "/Moviesta/service-worker.js"
 }
