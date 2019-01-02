@@ -74,7 +74,7 @@ class Card extends Component {
               className="movie__meta"
             >
               <h1 style={{ marginBottom: 0 }}>
-                <a href={homepage} rel="noopener" style={{ fontSize: '2.5em' }}>{title}</a>
+                <a href={homepage} rel="noopener" style={{ fontSize: '2em' }}>{title}</a>
                 <span style={{ marginLeft: '10px', fontSize: '1em' }}>{formatYear(release_date) || 'Date Not Found'}</span>
               </h1>
 

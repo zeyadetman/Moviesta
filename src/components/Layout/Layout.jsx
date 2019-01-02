@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout as AntLayout, Menu, Icon, Input, Select, Pagination } from 'antd';
+import { Layout as AntLayout, Menu, Icon, Input, Select, Pagination, Spin } from 'antd';
 import { connect } from 'react-redux';
 import {
   searchKeywords,
@@ -34,7 +34,8 @@ class Layout extends Component {
       movies: [],
       favs: [],
       mode: 'home',
-      favsInfo: []
+      favsInfo: [],
+      loading: false
     };
 
     this.handleSearch = this.handleSearch.bind(this);
@@ -63,7 +64,7 @@ class Layout extends Component {
   }
 
   async handleSearch(searchQuery) {
-    await this.setState({ searchQuery, mode: 'home' });
+    await this.setState({ searchQuery, mode: 'home', loading: true });
     const { searchType } = this.state;
 
     if (searchType === 'title') {
@@ -83,6 +84,8 @@ class Layout extends Component {
 
       this.setState({ keywordsIds: keywordsIdsTemp.join('|') }, this.fetchMovies);
     }
+
+    this.setState({ loading: false });
   }
 
   async handlePageChange(pageNum) {
@@ -110,6 +113,7 @@ class Layout extends Component {
   }
 
   async fetchFavsInfo(favs) {
+    this.setState({ loading: true });
     const saving = [];
     for (const fav of favs) {
       const mr = await this.props.movieMoreInfo(fav);
@@ -117,7 +121,7 @@ class Layout extends Component {
       saving.push(banks);
     }
 
-    this.setState({ ...this.state, mode: 'favorite', favsInfo: saving });
+    this.setState({ ...this.state, loading: false, mode: 'favorite', favsInfo: saving, searchPagesCount: 0 });
   }
 
   render() {
@@ -165,7 +169,7 @@ class Layout extends Component {
               key="sub1"
               title={<span><Icon type="user" /><span>User</span></span>}
             >
-              <Menu.Item key="1" onClick={() => this.setState({ mode: 'home' })}>Home</Menu.Item>
+              <Menu.Item key="1" onClick={() => this.handleSearch(this.state.searchQuery)}>Home</Menu.Item>
               <Menu.Item key="2" onClick={() => this.fetchFavsInfo(this.state.favs)}>Favorite List</Menu.Item>
               <Menu.Item key="3" onClick={() => { fire.auth().signOut(); cookies.remove('token'); }}>Sign Out</Menu.Item>
             </SubMenu>
@@ -196,41 +200,43 @@ class Layout extends Component {
             }}>The King of Movies</h2>
           </div>
           <div>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-              gridAutoRows: 'auto',
-              gridGap: '1rem'
-            }}>
-              {
-                this.state.movies
-                  ? map(movie => {
-                    return (
-                      <Card
-                        key={movie.id}
-                        id={movie.id}
-                        poster_path={movie.poster_path}
-                        title={movie.title}
-                        overview={movie.overview}
-                        addMovieFav={this.addMovieFav}
-                        isMovieFav={this.state.favs ? includes(movie.id, this.state.favs) : false}
-                      />);
-                  }, this.state.mode === 'favorite'
-                      ? this.state.favsInfo
-                      : this.state.movies)
-                  : null
-              }
-            </div>
-            <Pagination
-              style={{
-                textAlign: 'right',
-                margin: '15px 0'
-              }}
-              defaultCurrent={1}
-              onChange={this.handlePageChange}
-              pageSize={pageSize}
-              total={this.state.searchPagesCount}
-            />
+            <Spin tip="Waiting..." spinning={this.state.loading}>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                gridAutoRows: 'auto',
+                gridGap: '1rem'
+              }}>
+                {
+                  this.state.movies
+                    ? map(movie => {
+                      return (
+                        <Card
+                          key={movie.id}
+                          id={movie.id}
+                          poster_path={movie.poster_path}
+                          title={movie.title}
+                          overview={movie.overview}
+                          addMovieFav={this.addMovieFav}
+                          isMovieFav={this.state.favs ? includes(movie.id, this.state.favs) : false}
+                        />);
+                    }, this.state.mode === 'favorite'
+                        ? this.state.favsInfo
+                        : this.state.movies)
+                    : null
+                }
+              </div>
+              <Pagination
+                style={{
+                  textAlign: 'right',
+                  margin: '15px 0'
+                }}
+                defaultCurrent={1}
+                onChange={this.handlePageChange}
+                pageSize={pageSize}
+                total={this.state.searchPagesCount}
+              />
+            </Spin>
           </div>
         </Content>
       </AntLayout >
